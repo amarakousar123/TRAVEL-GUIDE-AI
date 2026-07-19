@@ -132,3 +132,66 @@ elif feature == "💬 Ask AI":
     prompt = st.text_area(
         "Ask Anything About Travel"
     )
+# -------------------- GENERATE RESPONSE --------------------
+
+if st.button("✈️ Generate Travel Plan"):
+
+    if prompt.strip() == "":
+        st.warning("Please enter a destination or your question.")
+
+    else:
+
+        system_prompt = """
+You are an expert AI Travel Guide.
+
+Always provide answers using this format:
+
+# Overview
+
+# Tourist Attractions
+
+# Hotels
+
+# Food
+
+# Budget
+
+# Transport
+
+# Best Time to Visit
+
+# Safety Tips
+
+# Extra Travel Advice
+
+Use headings, bullet points and emojis.
+"""
+
+        with st.spinner("🌍 Planning your trip..."):
+
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": system_prompt
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.7,
+                max_tokens=1200
+            )
+
+        answer = response.choices[0].message.content
+
+        st.success("✅ Travel Plan Ready!")
+
+        st.markdown(answer)
+
+        # Save Chat History
+        st.session_state.history.append(("You", prompt))
+        st.session_state.history.append(("AI", answer))
+        
