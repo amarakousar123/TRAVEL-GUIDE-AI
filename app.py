@@ -194,4 +194,40 @@ Use headings, bullet points and emojis.
         # Save Chat History
         st.session_state.history.append(("You", prompt))
         st.session_state.history.append(("AI", answer))
-        
+        # -------------------- CHAT HISTORY --------------------
+
+st.markdown("---")
+st.subheader("💬 Conversation History")
+
+if len(st.session_state.history) == 0:
+    st.info("No conversation yet.")
+else:
+    for sender, message in st.session_state.history:
+        if sender == "You":
+            st.markdown(f"**🧑 You:** {message}")
+        else:
+            st.markdown(f"**🤖 AI:** {message}")
+
+# -------------------- DOWNLOAD LAST RESPONSE --------------------
+
+if len(st.session_state.history) > 0:
+
+    last_answer = ""
+
+    for sender, message in reversed(st.session_state.history):
+        if sender == "AI":
+            last_answer = message
+            break
+
+    if last_answer:
+        st.download_button(
+            label="📥 Download Travel Plan",
+            data=last_answer,
+            file_name="travel_plan.txt",
+            mime="text/plain"
+        )
+
+# -------------------- FOOTER --------------------
+
+st.markdown("---")
+st.caption("🌍 AI Travel Guide • Powered by Groq & Streamlit")
