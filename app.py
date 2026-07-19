@@ -300,3 +300,159 @@ Do NOT include:
 - Tourist places
 - Budget
 """        
+# =====================================================
+# FEATURE 7
+# =====================================================
+
+elif feature == "🎒 Packing List":
+
+    st.header("🎒 Packing List")
+
+    city = st.text_input("Destination")
+
+    season = st.selectbox(
+        "Season",
+        [
+            "Summer",
+            "Winter",
+            "Spring",
+            "Autumn"
+        ]
+    )
+
+    if city:
+
+        prompt = f"Create a packing checklist for {city} during {season}."
+
+        system_prompt = """
+You are a travel packing expert.
+
+ONLY create a packing checklist.
+
+Include:
+- Clothes
+- Shoes
+- Toiletries
+- Electronics
+- Documents
+- Medicines
+
+Do NOT include hotels, food, budget or tourist places.
+"""
+
+# =====================================================
+# FEATURE 8
+# =====================================================
+
+elif feature == "☀️ Best Time to Visit":
+
+    st.header("☀️ Best Time to Visit")
+
+    city = st.text_input("Destination")
+
+    if city:
+
+        prompt = f"What is the best time to visit {city}?"
+
+        system_prompt = """
+You are a travel season expert.
+
+ONLY explain:
+
+- Best months
+- Weather
+- Peak season
+- Off season
+- Festivals (if relevant)
+
+Do NOT include hotels or budget.
+"""
+
+# =====================================================
+# FEATURE 9
+# =====================================================
+
+elif feature == "🛡 Safety Tips":
+
+    st.header("🛡 Safety Tips")
+
+    city = st.text_input("Destination")
+
+    if city:
+
+        prompt = f"Give travel safety tips for {city}."
+
+        system_prompt = """
+You are a travel safety expert.
+
+ONLY provide:
+
+- Safety precautions
+- Emergency numbers
+- Local laws
+- Scams to avoid
+- Health advice
+
+Do NOT include hotels, food or itinerary.
+"""
+
+# =====================================================
+# FEATURE 10
+# =====================================================
+
+elif feature == "💬 Ask AI":
+
+    st.header("💬 Ask AI")
+
+    prompt = st.text_area(
+        "Ask any travel-related question"
+    )
+
+    system_prompt = """
+You are an expert AI Travel Guide.
+
+Answer ONLY what the user asks.
+
+Do not add unnecessary information.
+"""
+
+# =====================================================
+# GENERATE BUTTON
+# =====================================================
+
+st.markdown("---")
+
+if st.button("✈️ Generate Answer"):
+
+    if prompt.strip() == "":
+        st.warning("Please enter your question or destination.")
+
+    else:
+
+        with st.spinner("🌍 Generating..."):
+
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": system_prompt
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.7,
+                max_tokens=1200
+            )
+
+        answer = response.choices[0].message.content
+
+        st.success("✅ Done!")
+
+        st.markdown(answer)
+
+        st.session_state.history.append(("You", prompt))
+        st.session_state.history.append(("AI", answer))
+        
