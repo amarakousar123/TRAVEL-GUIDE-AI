@@ -1,90 +1,81 @@
-import streamlit as st
-from groq import Groq
-from dotenv import load_dotenv
-import os
-
-# Load environment variables
-load_dotenv()
-
-# Get API Key
-api_key = os.getenv("GROQ_API_KEY")
-
-# Create Groq Client
-client = Groq(api_key=api_key)
-
-# -------------------- PAGE SETTINGS --------------------
-st.set_page_config(
-    page_title="AI Travel Guide",
-    page_icon="🌍",
-    layout="centered"
+feature = st.sidebar.radio(
+    "🌍 Select Feature",
+    [
+        "🏖️ Tourist Places",
+        "📅 Trip Planner",
+        "💰 Budget Planner",
+        "🏨 Hotels",
+        "🍔 Food",
+        "🚖 Transport",
+        "🎒 Packing List",
+        "🛡️ Safety Tips",
+        "🌤️ Best Time to Visit",
+        "💬 Ask Anything"
+    ]
 )
+if feature == "📅 Trip Planner":
+    city = st.text_input("Destination")
+    days = st.slider("Trip Days",1,15,3)
+    trip_type = st.selectbox(
+        "Trip Type",
+        ["Solo","Family","Friends","Couple","Business"]
+    )
 
-# -------------------- TITLE --------------------
-st.title("🌍 AI Travel Guide Chatbot")
-st.write("Plan your perfect trip with AI!")
+    prompt = f"Plan a {days}-day {trip_type} trip to {city}."
 
-# -------------------- SIDEBAR --------------------
-st.sidebar.title("✨ Features")
-st.sidebar.markdown("""
-- 🌍 Tourist Places
-- 💰 Budget Estimation
-- 🏨 Hotel Suggestions
-- 🍽️ Food Recommendations
-- 🚗 Transport Guide
-- ☀️ Best Time to Visit
-- 🧳 Packing Checklist
-- 📅 Travel Itinerary
-- 💡 Safety Tips
-- 🤖 AI Travel Assistant
-""")
+elif feature == "💰 Budget Planner":
+    city = st.text_input("Destination")
+    budget = st.number_input("Budget (PKR)",10000,500000,50000)
 
-# -------------------- USER INPUT --------------------
-user_input = st.text_area(
-    "Ask anything about travelling...",
-    placeholder="Example: Plan a 3-day trip to Murree with a budget of PKR 30,000"
+    prompt = f"Create a travel plan for {city} within PKR {budget}."
+
+elif feature == "🏨 Hotels":
+    city = st.text_input("City")
+
+    prompt = f"Suggest the best hotels in {city}."
+
+elif feature == "🍔 Food":
+    city = st.text_input("City")
+
+    prompt = f"Recommend famous foods in {city}."
+
+elif feature == "🎒 Packing List":
+    city = st.text_input("Destination")
+    season = st.selectbox(
+        "Season",
+        ["Summer","Winter","Spring","Autumn"]
+    )
+
+    prompt = f"Create a packing list for {city} in {season}."
+    if "history" not in st.session_state:
+    st.session_state.history = []
+
+st.session_state.history.append(("You",prompt))
+st.session_state.history.append(("AI",answer))
+
+st.subheader("💬 Conversation")
+
+for sender,msg in st.session_state.history:
+    st.markdown(f"**{sender}:** {msg}")
+    if st.sidebar.button("🗑 Clear Chat"):
+    st.session_state.history = []
+    st.download_button(
+    "📥 Download Travel Plan",
+    answer,
+    file_name="travel_plan.txt"
 )
+    col1,col2,col3 = st.columns(3)
 
-# -------------------- BUTTON --------------------
-if st.button("Generate Travel Plan"):
+col1.metric("Countries","190+")
+col2.metric("Travel Tips","1000+")
+col3.metric("AI Support","24/7")
+st.subheader("🚀 Quick Questions")
 
-    if user_input.strip() == "":
-        st.warning("Please enter your question.")
-    else:
+if st.button("Murree Trip"):
+    prompt = "Plan a 3-day trip to Murree."
 
-        system_prompt = """
-You are an expert AI Travel Guide.
+if st.button("Hunza Trip"):
+    prompt = "Plan a 5-day trip to Hunza."
 
-Always help the user with:
-
-1. Tourist attractions
-2. Estimated travel budget
-3. Hotel recommendations
-4. Food recommendations
-5. Transport options
-6. Best season to visit
-7. Packing checklist
-8. Safety tips
-9. Suggested itinerary
-10. Local culture and useful tips
-
-Always answer in a clear and organized format using headings and bullet points.
-"""
-
-        final_prompt = system_prompt + "\n\nUser Question:\n" + user_input
-
-        with st.spinner("Planning your trip..."):
-
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_input}
-                ],
-                temperature=0.7,
-                max_tokens=1024
-            )
-
-            answer = response.choices[0].message.content
-
-        st.success("Travel Plan Ready!")
-        st.markdown(answer)
+if st.button("Skardu Trip"):
+    prompt = "Plan a 7-day trip to Skardu."
