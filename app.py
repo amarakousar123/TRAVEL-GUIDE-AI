@@ -455,4 +455,74 @@ if st.button("✈️ Generate Answer"):
 
         st.session_state.history.append(("You", prompt))
         st.session_state.history.append(("AI", answer))
-        
+# =====================================================
+# CHAT HISTORY
+# =====================================================
+
+st.markdown("---")
+st.subheader("💬 Conversation History")
+
+if len(st.session_state.history) == 0:
+    st.info("No conversation yet. Start by selecting a feature from the sidebar.")
+else:
+
+    for sender, message in st.session_state.history:
+
+        if sender == "You":
+            st.markdown(f"👤 **You:** {message}")
+
+        else:
+            st.markdown(f"🤖 **AI:** {message}")
+
+# =====================================================
+# DOWNLOAD LAST RESPONSE
+# =====================================================
+
+if len(st.session_state.history) > 0:
+
+    last_answer = ""
+
+    for sender, message in reversed(st.session_state.history):
+
+        if sender == "AI":
+            last_answer = message
+            break
+
+    if last_answer:
+
+        st.download_button(
+            label="📥 Download Last Answer",
+            data=last_answer,
+            file_name="travel_guide_response.txt",
+            mime="text/plain"
+        )
+
+# =====================================================
+# QUICK DESTINATIONS
+# =====================================================
+
+st.markdown("---")
+st.subheader("🌍 Popular Destinations")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("🏔 Murree"):
+        st.info("Select 'Trip Planner' or another feature from the sidebar, then enter Murree.")
+
+with col2:
+    if st.button("🏞 Hunza"):
+        st.info("Select 'Trip Planner' or another feature from the sidebar, then enter Hunza.")
+
+with col3:
+    if st.button("🏕 Skardu"):
+        st.info("Select 'Trip Planner' or another feature from the sidebar, then enter Skardu.")
+
+# =====================================================
+# FOOTER
+# =====================================================
+
+st.markdown("---")
+
+st.caption("🌍 AI Travel Guide | Powered by Groq + Streamlit")
+
