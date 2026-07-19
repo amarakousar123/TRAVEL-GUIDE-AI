@@ -47,7 +47,6 @@ elif feature == "🎒 Packing List":
     )
 
     prompt = f"Create a packing list for {city} in {season}."
-    
 if st.sidebar.button("🗑 Clear Chat"):
     st.session_state.history = []
     
