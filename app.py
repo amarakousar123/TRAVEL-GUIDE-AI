@@ -47,9 +47,10 @@ elif feature == "🎒 Packing List":
     )
 
     prompt = f"Create a packing list for {city} in {season}."
-    if "history" not in st.session_state:
+    
+if st.sidebar.button("🗑 Clear Chat"):
     st.session_state.history = []
-
+    
 st.session_state.history.append(("You",prompt))
 st.session_state.history.append(("AI",answer))
 
