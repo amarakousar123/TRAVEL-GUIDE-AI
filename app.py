@@ -153,4 +153,150 @@ Do NOT provide:
 
 Explain each place briefly.
 """
-        
+# =====================================================
+# FEATURE 3
+# =====================================================
+
+elif feature == "🏨 Hotel Suggestions":
+
+    st.header("🏨 Hotel Suggestions")
+
+    city = st.text_input("Enter City")
+
+    hotel_type = st.selectbox(
+        "Hotel Type",
+        [
+            "Budget",
+            "Standard",
+            "Luxury",
+            "Family",
+            "Business"
+        ]
+    )
+
+    if city:
+
+        prompt = f"Suggest the best {hotel_type} hotels in {city}."
+
+        system_prompt = """
+You are a hotel recommendation expert.
+
+ONLY recommend hotels.
+
+Include:
+- Hotel Name
+- Price Range
+- Facilities
+- Why it is recommended
+
+Do NOT include:
+- Tourist places
+- Food
+- Budget planning
+- Packing list
+- Transport
+"""
+
+# =====================================================
+# FEATURE 4
+# =====================================================
+
+elif feature == "🍔 Food Guide":
+
+    st.header("🍔 Food Guide")
+
+    city = st.text_input("Enter City")
+
+    if city:
+
+        prompt = f"Recommend famous foods and restaurants in {city}."
+
+        system_prompt = """
+You are a food expert.
+
+ONLY recommend:
+
+- Famous local dishes
+- Best restaurants
+- Street food
+- Desserts
+- Drinks
+
+Do NOT include:
+
+- Hotels
+- Tourist places
+- Budget
+- Transport
+- Packing
+"""
+
+# =====================================================
+# FEATURE 5
+# =====================================================
+
+elif feature == "💰 Budget Planner":
+
+    st.header("💰 Budget Planner")
+
+    city = st.text_input("Destination")
+
+    budget = st.number_input(
+        "Budget (PKR)",
+        min_value=5000,
+        max_value=1000000,
+        value=50000,
+        step=5000
+    )
+
+    if city:
+
+        prompt = f"Create a travel budget for {city} within PKR {budget}."
+
+        system_prompt = """
+You are a travel budget expert.
+
+ONLY estimate:
+
+- Hotel cost
+- Food cost
+- Transport cost
+- Entry ticket cost
+- Total estimated budget
+
+Do NOT recommend tourist places or restaurants.
+"""
+
+# =====================================================
+# FEATURE 6
+# =====================================================
+
+elif feature == "🚖 Transport Guide":
+
+    st.header("🚖 Transport Guide")
+
+    city = st.text_input("Destination")
+
+    if city:
+
+        prompt = f"Explain transport options in {city}."
+
+        system_prompt = """
+You are a transport guide.
+
+ONLY explain:
+
+- Taxi
+- Bus
+- Metro
+- Train
+- Car Rental
+- Local transport tips
+
+Do NOT include:
+
+- Hotels
+- Food
+- Tourist places
+- Budget
+"""        
