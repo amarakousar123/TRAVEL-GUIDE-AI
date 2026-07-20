@@ -36,11 +36,22 @@ st.write("Plan your perfect trip with AI.")
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "city" not in st.session_state:
+    st.session_state.city = ""
+
 # ----------------------------
 # SIDEBAR
 # ----------------------------
 
 st.sidebar.title("✈️ Travel Assistant")
+
+# --- SHARED DESTINATION INPUT (ab sirf ek dafa likhna hoga) ---
+st.session_state.city = st.sidebar.text_input(
+    "🌍 Destination (ek dafa likhein, sab features ke liye use hoga)",
+    value=st.session_state.city
+)
+
+st.sidebar.markdown("---")
 
 feature = st.sidebar.radio(
     "Choose a Feature",
@@ -78,6 +89,9 @@ st.markdown("---")
 prompt = ""
 system_prompt = ""
 
+# Shared city variable for all features
+city = st.session_state.city
+
 # =====================================================
 # FEATURE 1
 # =====================================================
@@ -85,8 +99,6 @@ system_prompt = ""
 if feature == "📅 Trip Planner":
 
     st.header("📅 Trip Planner")
-
-    city = st.text_input("Destination")
 
     days = st.slider(
         "Trip Days",
@@ -134,8 +146,6 @@ elif feature == "🏖 Tourist Places":
 
     st.header("🏖 Tourist Places")
 
-    city = st.text_input("Enter City")
-
     if city:
 
         prompt = f"Recommend the best tourist attractions in {city}."
@@ -160,8 +170,6 @@ Explain each place briefly.
 elif feature == "🏨 Hotel Suggestions":
 
     st.header("🏨 Hotel Suggestions")
-
-    city = st.text_input("Enter City")
 
     hotel_type = st.selectbox(
         "Hotel Type",
@@ -205,8 +213,6 @@ elif feature == "🍔 Food Guide":
 
     st.header("🍔 Food Guide")
 
-    city = st.text_input("Enter City")
-
     if city:
 
         prompt = f"Recommend famous foods and restaurants in {city}."
@@ -238,8 +244,6 @@ Do NOT include:
 elif feature == "💰 Budget Planner":
 
     st.header("💰 Budget Planner")
-
-    city = st.text_input("Destination")
 
     budget = st.number_input(
         "Budget (PKR)",
@@ -275,8 +279,6 @@ elif feature == "🚖 Transport Guide":
 
     st.header("🚖 Transport Guide")
 
-    city = st.text_input("Destination")
-
     if city:
 
         prompt = f"Explain transport options in {city}."
@@ -307,8 +309,6 @@ Do NOT include:
 elif feature == "🎒 Packing List":
 
     st.header("🎒 Packing List")
-
-    city = st.text_input("Destination")
 
     season = st.selectbox(
         "Season",
@@ -348,8 +348,6 @@ elif feature == "☀️ Best Time to Visit":
 
     st.header("☀️ Best Time to Visit")
 
-    city = st.text_input("Destination")
-
     if city:
 
         prompt = f"What is the best time to visit {city}?"
@@ -375,8 +373,6 @@ Do NOT include hotels or budget.
 elif feature == "🛡 Safety Tips":
 
     st.header("🛡 Safety Tips")
-
-    city = st.text_input("Destination")
 
     if city:
 
@@ -415,6 +411,13 @@ Answer ONLY what the user asks.
 
 Do not add unnecessary information.
 """
+
+# =====================================================
+# WARNING IF NO CITY SET (for features that need it)
+# =====================================================
+
+if feature != "💬 Ask AI" and not city:
+    st.warning("👆 Sidebar mein pehle Destination likhein, phir feature use karein.")
 
 # =====================================================
 # GENERATE BUTTON
@@ -508,15 +511,18 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("🏔 Murree"):
-        st.info("Select 'Trip Planner' or another feature from the sidebar, then enter Murree.")
+        st.session_state.city = "Murree"
+        st.rerun()
 
 with col2:
     if st.button("🏞 Hunza"):
-        st.info("Select 'Trip Planner' or another feature from the sidebar, then enter Hunza.")
+        st.session_state.city = "Hunza"
+        st.rerun()
 
 with col3:
     if st.button("🏕 Skardu"):
-        st.info("Select 'Trip Planner' or another feature from the sidebar, then enter Skardu.")
+        st.session_state.city = "Skardu"
+        st.rerun()
 
 # =====================================================
 # FOOTER
@@ -525,4 +531,3 @@ with col3:
 st.markdown("---")
 
 st.caption("🌍 AI Travel Guide | Powered by Groq + Streamlit")
-
